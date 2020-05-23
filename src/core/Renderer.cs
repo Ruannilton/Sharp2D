@@ -69,9 +69,6 @@ namespace LibNet.Sharp2D
 
             try
             {
-                var img = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(path);
-                var data = img.LockBits(new System.Drawing.Rectangle(0, 0, 0, 0), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
                 image = SixLabors.ImageSharp.Image.Load<Rgba32>(path);
             }
             catch (Exception e)
