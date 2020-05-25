@@ -12,5 +12,10 @@ namespace LibNet.Sharp2D
             this.size = size;
             this.position = position;
         }
+        public RectPosition(Vector2 position, Vector2 size)
+        {
+            this.size = size;
+            this.position = new Vector3(position);
+        }
     }
 }

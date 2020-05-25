@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
@@ -63,15 +64,14 @@ namespace LibNet.Sharp2D
             this.typeFace = face != null ? face : SKTypeface.Default;
             this.GenImage();
         }
+        ~RenderText()
+        {
+            Marshal.FreeHGlobal(BitmapPtr);
+            BitmapPtr = IntPtr.Zero;
+        }
         private void GenImage()
         {
-            Altered = false;
-            if (BitmapPtr != IntPtr.Zero)
-            {
-                Marshal.FreeHGlobal(BitmapPtr);
-                BitmapPtr = IntPtr.Zero;
-            }
-
+            int max_widht = 0;
             var paint = new SKPaint();
             paint.TextSize = _FontSize;
             paint.IsAntialias = true;
@@ -79,8 +79,25 @@ namespace LibNet.Sharp2D
             paint.IsStroke = false;
             paint.TextAlign = SKTextAlign.Center;
             paint.Typeface = typeFace;
-            BitmapWidth = (int)paint.MeasureText(Text);
-            BitmapHeight = (int)FontSize;
+
+            bool look_str(string s)
+            {
+                int l = (int)paint.MeasureText(s);
+                if (max_widht < l) max_widht = l;
+                return string.IsNullOrEmpty(s);
+            }
+            string[] textLines = Text.Split('\n').Where(s => !look_str(s)).ToArray();
+            Altered = false;
+            if (BitmapPtr != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(BitmapPtr);
+                BitmapPtr = IntPtr.Zero;
+            }
+
+
+
+            BitmapWidth = max_widht;
+            BitmapHeight = (int)FontSize * textLines.Length;
 
 
             this.BitmapPtr = Marshal.AllocHGlobal(BitmapWidth * BitmapHeight * 4);
@@ -96,7 +113,10 @@ namespace LibNet.Sharp2D
             }
 
             canvas.DrawColor(Background);
-            canvas.DrawText(_Text, BitmapWidth / 2, _FontSize - _FontSize / 8, paint);
+            for (int i = 0; i < textLines.Length; i++)
+            {
+                canvas.DrawText(textLines[i], paint.MeasureText(textLines[i]) / 2, _FontSize * (i + 1), paint);
+            }
             canvas.Flush();
             TextureID = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, TextureID);
@@ -108,11 +128,6 @@ namespace LibNet.Sharp2D
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
-        }
-        ~RenderText()
-        {
-            Marshal.FreeHGlobal(BitmapPtr);
-            BitmapPtr = IntPtr.Zero;
         }
 
         public Vector2 MeasureSize()

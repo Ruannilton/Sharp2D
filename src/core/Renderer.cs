@@ -47,13 +47,29 @@ namespace LibNet.Sharp2D
             ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0, ViewPort.X, ViewPort.Y, 0, 100.0f, -100.0f);
             UpdateProjMatrixOnGPU();
         }
+        public void Draw(in RenderOption renderData, Vector3 position, Vector2 size)
+        {
+            Matrix4[] matrices = RectToMat(new RectPosition(position, size));
+            renderData.Use();
+            SetTransforms(matrices);
+            GL.BindVertexArray(rectID);
+            GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, matrices.Length);
+        }
+        public void Draw(in RenderOption renderData, Vector2 position, Vector2 size)
+        {
+            Matrix4[] matrices = RectToMat(new RectPosition(position, size));
+            renderData.Use();
+            SetTransforms(matrices);
+            GL.BindVertexArray(rectID);
+            GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, matrices.Length);
+        }
         public void Draw(in RenderOption renderData, params RectPosition[] transforms)
         {
             Matrix4[] matrices = RectToMat(transforms);
             renderData.Use();
             SetTransforms(matrices);
             GL.BindVertexArray(rectID);
-            GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, transforms.Length);
+            GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, matrices.Length);
         }
         public void Draw(in RenderOption renderData, params Matrix4[] transforms)
         {
