@@ -7,6 +7,6 @@
 
   Result of example:
   
-  ![Result](https://github.com/Ruannilton/Sharp2D/blob/master/example/result.png?raw=true)
+  ![Result](https://github.com/Ruannilton/Sharp2D/blob/master/example/resul.png?raw=true)
   
   
