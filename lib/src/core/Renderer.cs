@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using OpenTK;
+using System.IO;
+using SkiaSharp;
 using OpenTK.Graphics.OpenGL;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.PixelFormats;
+using System.Collections.Generic;
 
 
 namespace LibNet.Sharp2D
@@ -81,42 +80,23 @@ namespace LibNet.Sharp2D
 
         public static int LoadImage(string path)
         {
-            Image<Rgba32> image = default;
 
-            try
+            using (var fs = new FileStream(path, FileMode.Open))
             {
-                image = SixLabors.ImageSharp.Image.Load<Rgba32>(path);
+                SKBitmap bitmap = SKBitmap.Decode(fs);
+                int textureID = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2D, textureID);
+
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+                GL.TexImage2D(TextureTarget.Texture2D, 0, (PixelInternalFormat)PixelFormat.Rgba, bitmap.Width, bitmap.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, bitmap.Bytes);
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                return textureID;
             }
-            catch (Exception e)
-            {
-                System.Console.Error.WriteLine(e.Message);
-                return 0;
-            }
-
-            Rgba32[] tPixels = image.GetPixelSpan().ToArray();
-            byte[] pixels = new byte[tPixels.Length * 4];
-
-            int i = 0;
-            foreach (var item in tPixels)
-            {
-                pixels[i] = item.R;
-                pixels[i + 1] = item.G;
-                pixels[i + 2] = item.B;
-                pixels[i + 3] = item.A;
-                i += 4;
-            }
-            int textureID = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, textureID);
-
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-            GL.TexImage2D(TextureTarget.Texture2D, 0, (PixelInternalFormat)PixelFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-            return textureID;
         }
 
         private void SetTransforms(params Matrix4[] transforms)
