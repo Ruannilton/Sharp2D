@@ -17,6 +17,33 @@ namespace LibNet.Sharp2D
             this.size = size;
             this.position = new Vector3(position);
         }
+
+        public static bool Inside(RectPosition a, Vector2 b)
+        {
+
+            if (a.position.X <= b.X && b.X < a.position.X + a.size.X)
+            {
+                if (a.position.Y <= b.Y && b.Y < a.position.Y + a.size.Y)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        public static bool Hit(RectPosition a, RectPosition b)
+        {
+
+            if (
+                RectPosition.Inside(a, b.position.Xy)
+             || RectPosition.Inside(a, b.position.Xy + new Vector2(b.size.X, 0))
+             || RectPosition.Inside(a, b.position.Xy + new Vector2(0, b.size.Y))
+             || RectPosition.Inside(a, b.position.Xy + b.size))
+                return true;
+
+            return false;
+        }
+
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
@@ -61,5 +88,7 @@ namespace LibNet.Sharp2D
 
             return false;
         }
+
+
     }
 }

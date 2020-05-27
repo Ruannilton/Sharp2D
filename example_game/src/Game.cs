@@ -32,6 +32,7 @@ public class Game : GameWindow
     private bool OnFloor = true;
 
     private float distLast = 0;
+    private bool Alive = true;
     public Game() : base(800, 640, GraphicsMode.Default, "Game Example")
     {
         Graphics = new Renderer(800, 640);
@@ -49,9 +50,6 @@ public class Game : GameWindow
         {
             Floor.Add(new RectPosition(new Vector2(i * 50, 590), new Vector2(50, 50)));
         }
-
-
-
 
     }
 
@@ -80,6 +78,7 @@ public class Game : GameWindow
     }
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
+        if (!Alive) return;
         Score += (float)e.Time;
         ScoreText.Text = "Score: " + ((int)Score).ToString();
 
@@ -106,7 +105,8 @@ public class Game : GameWindow
             Floor[i] = f;
         }
         distLast += velocidade;
-        if (distLast > 200)
+
+        if (distLast > 250)
         {
             distLast = 0;
             int n = new Random().Next() % 100;
@@ -140,17 +140,38 @@ public class Game : GameWindow
             else
                 Cactos[i] = f;
         }
+
+
+        foreach (var c in Cactos)
+        {
+            if (RectPosition.Hit(Player.transform, c))
+            {
+                HowPlay.Text = "You Loose!";
+                Alive = false;
+                HowPlayPos.Y = 300;
+                HowPlayPos.X = 400 - HowPlay.MeasureSize().X / 2;
+            }
+        }
+
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
     {
         GL.ClearColor(SColor.CornflowerBlue);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-        Graphics.Draw(Player.image, Player.transform);
-        Graphics.Draw(FloorImage, Floor.ToArray());
-        Graphics.Draw(CactoImage, Cactos.ToArray());
-        Graphics.Draw(HowPlay, HowPlayPos, HowPlay.MeasureSize());
-        Graphics.Draw(ScoreText, new Vector2(10, 10), ScoreText.MeasureSize());
+        if (Alive)
+        {
+            Graphics.Draw(Player.image, Player.transform);
+            Graphics.Draw(FloorImage, Floor.ToArray());
+            Graphics.Draw(CactoImage, Cactos.ToArray());
+            Graphics.Draw(HowPlay, HowPlayPos, HowPlay.MeasureSize());
+            Graphics.Draw(ScoreText, new Vector2(10, 10), ScoreText.MeasureSize());
+        }
+        else
+        {
+            Graphics.Draw(HowPlay, HowPlayPos, HowPlay.MeasureSize());
+            Graphics.Draw(ScoreText, new Vector2(400 - ScoreText.MeasureSize().X / 2, HowPlayPos.Y + 50), ScoreText.MeasureSize());
+        }
         Context.SwapBuffers();
 
     }
