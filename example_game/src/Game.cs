@@ -17,8 +17,8 @@ public class Game : GameWindow
     private Vector2 HowPlayPos;
     private RenderText ScoreText;
 
-    private List<RectPosition> Floor = new List<RectPosition>();
-    private List<RectPosition> Cactos = new List<RectPosition>(12);
+    private List<RectPosition> Floor;
+    private List<RectPosition> Cactos;
 
 
     private float velocidade = 4;
@@ -32,11 +32,16 @@ public class Game : GameWindow
     private bool OnFloor = true;
 
     private float distLast = 0;
-    private bool Alive = true;
+    private bool Alive;
+
+
     public Game() : base(800, 640, GraphicsMode.Default, "Game Example")
     {
         Graphics = new Renderer(800, 640);
+    }
 
+    protected override void OnLoad(System.EventArgs e)
+    {
         Player = new Player()
         {
             transform = new RectPosition(new Vector2(300, 540), new Vector2(50, 50)),
@@ -45,22 +50,32 @@ public class Game : GameWindow
 
         FloorImage = new RenderImage(Renderer.LoadImage("./images/chao.png"));
         CactoImage = new RenderImage(Renderer.LoadImage("./images/cacto.png"));
+        VSync = VSyncMode.On;
+        StartGame();
+    }
+
+    void StartGame()
+    {
+        Floor = new List<RectPosition>();
+        Cactos = new List<RectPosition>(12);
+        Player.transform = new RectPosition(new Vector2(300, 540), new Vector2(50, 50));
+        Alive = true;
+        Score = 0;
+        Jump = false;
+        OnFloor = true;
+        distLast = 0;
+        HowPlay = new RenderText("Press any button to jump!", 35);
+        HowPlay.TextColor = SColor.Yellow;
+        HowPlayPos = new Vector2(400 - HowPlay.MeasureSize().X / 2, 100);
+        ScoreText = new RenderText(Score.ToString(), 20);
+
 
         for (int i = 0; i < 20; i++)
         {
             Floor.Add(new RectPosition(new Vector2(i * 50, 590), new Vector2(50, 50)));
         }
-
     }
 
-    protected override void OnLoad(System.EventArgs e)
-    {
-        HowPlay = new RenderText("Press any button to jump!", 35);
-        HowPlay.TextColor = SColor.Yellow;
-        HowPlayPos = new Vector2(400 - HowPlay.MeasureSize().X / 2, 100);
-        ScoreText = new RenderText(Score.ToString(), 20);
-        VSync = VSyncMode.On;
-    }
     protected override void OnResize(System.EventArgs e)
     {
         this.Width = 800;
@@ -70,6 +85,12 @@ public class Game : GameWindow
     protected override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs e)
     {
 
+        if (Alive == false)
+        {
+            Alive = true;
+            StartGame();
+        }
+        else
         if (OnFloor == true)
         {
             Jump = true;
@@ -78,78 +99,81 @@ public class Game : GameWindow
     }
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
-        if (!Alive) return;
-        Score += (float)e.Time;
-        ScoreText.Text = "Score: " + ((int)Score).ToString();
 
-        if (Jump) acel += 0.025f;
-        if (Jump == false && Player.transform.position.Y >= 540)
+        if (Alive)
         {
-            OnFloor = true;
-            acel = 0;
-        }
-        if (Jump == true && Player.transform.position.Y > 540 - JumpHeight) Player.transform.position.Y -= 10;
-        if (Jump == true && Player.transform.position.Y <= 540 - JumpHeight) Jump = false;
-        if (Jump == false && OnFloor == false) Player.transform.position.Y += 4 + acel;
+            Score += (float)e.Time;
+            ScoreText.Text = "Score: " + ((int)Score).ToString();
 
-
-
-        for (int i = 0; i < Floor.Count; i++)
-        {
-            var f = Floor[i];
-            f.position.X -= velocidade;
-            if (f.position.X <= -50)
+            if (Jump) acel += 0.025f;
+            if (Jump == false && Player.transform.position.Y >= 540)
             {
-                f.position.X = 19 * 50;
+                OnFloor = true;
+                acel = 0;
             }
-            Floor[i] = f;
-        }
-        distLast += velocidade;
-
-        if (distLast > 250)
-        {
-            distLast = 0;
-            int n = new Random().Next() % 100;
-            if (n < 15)
-            {
-                Cactos.Add(new RectPosition(new Vector2(850, 540), new Vector2(50, 50)));
-            }
-            else if (n < 20)
-            {
-                Cactos.Add(new RectPosition(new Vector2(850, 540), new Vector2(50, 50)));
-                Cactos.Add(new RectPosition(new Vector2(900, 540), new Vector2(50, 50)));
-                distLast -= 50;
-            }
-            else if (n < 23)
-            {
-                Cactos.Add(new RectPosition(new Vector2(850, 540), new Vector2(50, 50)));
-                Cactos.Add(new RectPosition(new Vector2(900, 540), new Vector2(50, 50)));
-                Cactos.Add(new RectPosition(new Vector2(950, 540), new Vector2(50, 50)));
-                distLast -= 75;
-            }
-        }
-
-        for (int i = 0; i < Cactos.Count; i++)
-        {
-            var f = Cactos[i];
-            f.position.X -= velocidade;
-            if (f.position.X <= -50)
-            {
-                Cactos.Remove(f);
-            }
-            else
-                Cactos[i] = f;
-        }
+            if (Jump == true && Player.transform.position.Y > 540 - JumpHeight) Player.transform.position.Y -= 10;
+            if (Jump == true && Player.transform.position.Y <= 540 - JumpHeight) Jump = false;
+            if (Jump == false && OnFloor == false) Player.transform.position.Y += 4 + acel;
 
 
-        foreach (var c in Cactos)
-        {
-            if (RectPosition.Hit(Player.transform, c))
+
+            for (int i = 0; i < Floor.Count; i++)
             {
-                HowPlay.Text = "You Loose!";
-                Alive = false;
-                HowPlayPos.Y = 300;
-                HowPlayPos.X = 400 - HowPlay.MeasureSize().X / 2;
+                var f = Floor[i];
+                f.position.X -= velocidade;
+                if (f.position.X <= -50)
+                {
+                    f.position.X = 19 * 50;
+                }
+                Floor[i] = f;
+            }
+            distLast += velocidade;
+
+            if (distLast > 250)
+            {
+                distLast = 0;
+                int n = new Random().Next() % 100;
+                if (n < 15)
+                {
+                    Cactos.Add(new RectPosition(new Vector2(850, 540), new Vector2(50, 50)));
+                }
+                else if (n < 20)
+                {
+                    Cactos.Add(new RectPosition(new Vector2(850, 540), new Vector2(50, 50)));
+                    Cactos.Add(new RectPosition(new Vector2(900, 540), new Vector2(50, 50)));
+                    distLast -= 50;
+                }
+                else if (n < 23)
+                {
+                    Cactos.Add(new RectPosition(new Vector2(850, 540), new Vector2(50, 50)));
+                    Cactos.Add(new RectPosition(new Vector2(900, 540), new Vector2(50, 50)));
+                    Cactos.Add(new RectPosition(new Vector2(950, 540), new Vector2(50, 50)));
+                    distLast -= 75;
+                }
+            }
+
+            for (int i = 0; i < Cactos.Count; i++)
+            {
+                var f = Cactos[i];
+                f.position.X -= velocidade;
+                if (f.position.X <= -50)
+                {
+                    Cactos.Remove(f);
+                }
+                else
+                    Cactos[i] = f;
+            }
+
+
+            foreach (var c in Cactos)
+            {
+                if (RectPosition.Hit(Player.transform, c))
+                {
+                    HowPlay.Text = "Press any button to restart!\n             You Loose!";
+                    Alive = false;
+                    HowPlayPos.Y = 300;
+                    HowPlayPos.X = 400 - HowPlay.MeasureSize().X / 2;
+                }
             }
         }
 
@@ -170,7 +194,7 @@ public class Game : GameWindow
         else
         {
             Graphics.Draw(HowPlay, HowPlayPos, HowPlay.MeasureSize());
-            Graphics.Draw(ScoreText, new Vector2(400 - ScoreText.MeasureSize().X / 2, HowPlayPos.Y + 50), ScoreText.MeasureSize());
+            Graphics.Draw(ScoreText, new Vector2(400 - ScoreText.MeasureSize().X / 2, HowPlayPos.Y + 100), ScoreText.MeasureSize());
         }
         Context.SwapBuffers();
 
