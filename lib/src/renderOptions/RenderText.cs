@@ -22,7 +22,7 @@ namespace LibNet.Sharp2D
         private SKTypeface typeFace;
         private SKColor ForeGround, Background;
         private bool Altered = false;
-        public Color TextColor
+        public SColor TextColor
         {
             get
             {
@@ -37,7 +37,7 @@ namespace LibNet.Sharp2D
                 Altered = true;
             }
         }
-        public Color BackgroundColor
+        public SColor BackgroundColor
         {
             get
             {
@@ -135,7 +135,7 @@ namespace LibNet.Sharp2D
             if (Altered) this.GenImage();
             return new Vector2(BitmapWidth, BitmapHeight);
         }
-        public override void Use()
+        internal override void Use()
         {
             if (Altered) this.GenImage();
             GL.UseProgram(Renderer.shaderTextureID);

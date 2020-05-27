@@ -11,7 +11,7 @@ namespace LibNet.Sharp2D
             textureID = texture;
             this.enableAlpha = enableAlpha;
         }
-        public override void Use()
+        internal override void Use()
         {
             GL.UseProgram(Renderer.shaderTextureID);
             GL.BindTexture(TextureTarget.Texture2D, textureID);

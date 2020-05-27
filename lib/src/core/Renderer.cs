@@ -17,10 +17,10 @@ namespace LibNet.Sharp2D
         private Vector2 ViewPort;
         private List<int> imagesLoaded = new List<int>();
 
-        public static int rectID;
-        public static int shaderColorID;
-        public static int shaderTextureID;
-        public static int shaderTextID;
+        internal static int rectID;
+        internal static int shaderColorID;
+        internal static int shaderTextureID;
+        internal static int shaderTextID;
 
         public Renderer(int width, int height)
         {

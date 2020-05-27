@@ -1,6 +1,6 @@
 namespace LibNet.Sharp2D
 {
-    public enum ShaderLoc
+    internal enum ShaderLoc
     {
         ProjectionMatrix = 0,
         vPos = 1,
@@ -9,9 +9,9 @@ namespace LibNet.Sharp2D
         vModel = 4,
         iColor = 8
     }
-    public static class ShaderSource
+    internal static class ShaderSource
     {
-        public const string COLOR_SHADER_VERTEX =
+        internal const string COLOR_SHADER_VERTEX =
         @"#version 430 core
 
         layout(std140, binding = 0) uniform Matrices
@@ -32,7 +32,7 @@ namespace LibNet.Sharp2D
             gl_Position =   projection* Model* vec4(vPos,1.0f);
             fColor = vColor*Color;
         }";
-        public const string COLOR_SHADER_FRAGMENT =
+        internal const string COLOR_SHADER_FRAGMENT =
         @"#version 430 core
 
         in vec4 fColor;
@@ -43,7 +43,7 @@ namespace LibNet.Sharp2D
             FragColor = fColor;
         }";
 
-        public const string TEXTURE_SHADER_VERTEX =
+        internal const string TEXTURE_SHADER_VERTEX =
         @"#version 430 core
 
         layout(std140, binding = 0) uniform Matrices
@@ -65,7 +65,7 @@ namespace LibNet.Sharp2D
             fUV = vUV;
         }";
 
-        public const string TEXTURE_SHADER_FRAGMENT =
+        internal const string TEXTURE_SHADER_FRAGMENT =
         @"#version 430 core
 
         in vec2 fUV;
@@ -78,7 +78,7 @@ namespace LibNet.Sharp2D
         fragColor = texture(texture0,fUV);
         }";
 
-        public const string TEXT_SHADER_VERTEX =
+        internal const string TEXT_SHADER_VERTEX =
                 @"#version 430 core
 
         layout(std140, binding = 0) uniform Matrices
@@ -108,7 +108,7 @@ namespace LibNet.Sharp2D
             backColor = BackColor;
         }";
 
-        public const string TEXT_SHADER_FRAGMENT =
+        internal const string TEXT_SHADER_FRAGMENT =
         @"#version 430 core
 
         in vec2 fUV;

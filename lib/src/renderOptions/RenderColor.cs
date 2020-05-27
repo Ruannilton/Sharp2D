@@ -6,12 +6,12 @@ namespace LibNet.Sharp2D
 {
     public class RenderColor : RenderOption
     {
-        public Color4 color;
-        public RenderColor(Color4 color)
+        public SColor color;
+        public RenderColor(SColor color)
         {
             this.color = color;
         }
-        public override void Use()
+        internal override void Use()
         {
             GL.UseProgram(Renderer.shaderColorID);
             GL.ProgramUniform4(Renderer.shaderColorID, 8, color);
