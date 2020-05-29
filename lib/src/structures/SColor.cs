@@ -65,7 +65,13 @@ namespace LibNet.Sharp2D
             }
         }
 
-
+        /// <summary>
+        ///  Create an instance of SColor 
+        /// </summary>
+        /// <param name="R">Red channel</param>
+        /// <param name="G">Green channel</param>
+        /// <param name="B">Blue channel</param>
+        /// <param name="A">Alpha channel </param>
         public SColor(byte R, byte G, byte B, byte A)
         {
 
@@ -74,6 +80,14 @@ namespace LibNet.Sharp2D
             this.G = G;
             this.A = A;
         }
+
+        /// <summary>
+        ///  Create an instance of SColor 
+        /// </summary>
+        /// <param name="R">Red channel</param>
+        /// <param name="G">Green channel</param>
+        /// <param name="B">Blue channel</param>
+        /// <param name="A">Alpha channel </param>
         public SColor(int R, int G, int B, int A)
         {
             this.R = (byte)R;
@@ -81,44 +95,140 @@ namespace LibNet.Sharp2D
             this.G = (byte)G;
             this.A = (byte)A;
         }
+
+        /// <summary>
+        /// Convert from SColor to Color
+        /// </summary>
         public static implicit operator Color(SColor c) => new Color(c.R, c.G, c.B, c.A);
+
+        /// <summary>
+        /// Convert from Color to SColor
+        /// </summary>
         public static implicit operator SColor(Color c) => new SColor(c.R, c.G, c.B, c.A);
+
+        /// <summary>
+        /// Convert from Color4 to SColor
+        /// </summary>
         public static implicit operator SColor(Color4 c) => (Color)c;
+
+        /// <summary>
+        /// Convert from Color4 to SColor
+        /// </summary>
         public static implicit operator Color4(SColor c) => (Color)c;
 
+        /// <summary>
+        /// Verify if two SColors are equal
+        /// </summary>
         public static bool operator ==(SColor left, SColor right) => (left.R, left.G, left.B, left.A) == (right.R, right.G, right.B, right.A);
+
+        /// <summary>
+        /// Verify if two SColors aren´t equal
+        /// </summary>
         public static bool operator !=(SColor left, SColor right) => (left.R, left.G, left.B, left.A) != (right.R, right.G, right.B, right.A);
+
+        /// <summary>
+        /// Multiply two SColors member by member
+        /// </summary>
         public static SColor operator *(SColor left, SColor right) => new SColor(left.R * right.R, left.G * right.G, left.B * right.B, left.A * right.A);
+
+        /// <summary>
+        /// Sum two SColors member by member
+        /// </summary>
         public static SColor operator +(SColor left, SColor right) => new SColor(left.R + right.R, left.G + right.G, left.B + right.B, left.A + right.A);
 
+        /// <summary>
+        /// Indicates whether this instance and a specified object are equal
+        /// </summary>
+        /// <param name="obj"></param>   
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <summary>
+        /// Returns the fully qualified type name of this instance
+        /// </summary>
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (102, 205, 170, 255)
+        /// </summary>
         public static SColor MediumAquamarine = Color4.MediumAquamarine;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (0, 0, 205, 255)
+        /// </summary>
         public static SColor MediumBlue = Color4.MediumBlue;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (186, 85, 211, 255)
+        /// </summary>
         public static SColor MediumOrchid = Color4.MediumOrchid;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (147, 112, 219, 255)
+        /// </summary>
         public static SColor MediumPurple = Color4.MediumPurple;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (60, 179, 113, 255)
+        /// </summary>
         public static SColor MediumSeaGreen = Color4.MediumSeaGreen;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (123, 104, 238, 255)
+        /// </summary>
         public static SColor MediumSlateBlue = Color4.MediumSlateBlue;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (0, 250, 154, 255)
+        /// </summary>
         public static SColor MediumSpringGreen = Color4.MediumSpringGreen;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (72, 209, 204, 255)
+        /// </summary>
         public static SColor MediumTurquoise = Color4.MediumTurquoise;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (245, 255, 250, 255)
+        /// </summary>
         public static SColor MintCream = Color4.MintCream;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (25, 25, 112, 255)
+        /// </summary>
         public static SColor MidnightBlue = Color4.MidnightBlue;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (128, 0, 0, 255)
+        /// </summary>
         public static SColor Maroon = Color4.Maroon;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (255, 228, 225, 255)
+        /// </summary>
         public static SColor MistyRose = Color4.MistyRose;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (255, 228, 181, 255)
+        /// </summary>
         public static SColor Moccasin = Color4.Moccasin;
+
+        /// <summary>
+        /// Gets the system color with (R, G, B, A) = (255, 228, 181, 255)
+        /// </summary>
         public static SColor NavajoWhite = Color4.NavajoWhite;
         public static SColor Navy = Color4.Navy;
         public static SColor OldLace = Color4.OldLace;
