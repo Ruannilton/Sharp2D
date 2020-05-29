@@ -4,9 +4,19 @@ using OpenTK.Graphics.OpenGL;
 
 namespace LibNet.Sharp2D
 {
-    public class RenderColor : RenderOption
+    /// <summary>
+    /// RenderComponent that draw a colored square
+    /// </summary>
+    public class RenderColor : RenderComponent
     {
+        /// <summary>
+        /// Color that will be drawn
+        /// </summary>
         public SColor color;
+        /// <summary>
+        /// Create an instance of RenderColor
+        /// </summary>
+        /// <param name="color">Color that will be drawn</param>
         public RenderColor(SColor color)
         {
             this.color = color;

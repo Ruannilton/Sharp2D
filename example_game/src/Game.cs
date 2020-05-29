@@ -45,11 +45,11 @@ public class Game : GameWindow
         Player = new Player()
         {
             transform = new RectPosition(new Vector2(300, 540), new Vector2(50, 50)),
-            image = new RenderImage(Renderer.LoadImage("./images/player.png"))
+            image = new RenderImage(Renderer.LoadImage("./images/player.png"), false)
         };
 
-        FloorImage = new RenderImage(Renderer.LoadImage("./images/chao.png"));
-        CactoImage = new RenderImage(Renderer.LoadImage("./images/cacto.png"));
+        FloorImage = new RenderImage(Renderer.LoadImage("./images/chao.png"), false);
+        CactoImage = new RenderImage(Renderer.LoadImage("./images/cacto.png"), false);
         VSync = VSyncMode.On;
         StartGame();
     }
@@ -161,7 +161,9 @@ public class Game : GameWindow
                     Cactos.Remove(f);
                 }
                 else
+                {
                     Cactos[i] = f;
+                }
             }
 
 

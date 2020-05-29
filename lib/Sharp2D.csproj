@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageVersion>1.0.3-alpha</PackageVersion>
+    <DocumentationFile>bin\Sharp2D.XML</DocumentationFile>
     <Authors>Ruan_Azevedo</Authors>
     <PackageId> LibNet.Sharp2D </PackageId>
   </PropertyGroup>

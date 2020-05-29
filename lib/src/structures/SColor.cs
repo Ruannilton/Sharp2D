@@ -3,10 +3,28 @@ using OpenTK.Graphics;
 
 namespace LibNet.Sharp2D
 {
+    /// <summary>
+    /// Struct that wrap Opentk.Color and OpenTK.Graphics.Color4
+    /// </summary>
     public struct SColor
     {
+        /// <summary>
+        /// R = Red
+        /// G = Greem
+        /// B = Blue
+        /// A = Alpha
+        /// Color channels with value range from 0 to 255
+        /// </summary>
         public byte R, G, B, A;
 
+        /// <summary>
+        /// Get or set an color channel by index value
+        /// R = 0
+        /// G = 1
+        /// B = 2
+        /// A = 3
+        /// </summary>
+        /// <value></value>
         public byte this[byte index]
         {
             get

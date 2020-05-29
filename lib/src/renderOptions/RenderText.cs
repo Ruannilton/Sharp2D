@@ -8,20 +8,34 @@ using System;
 
 namespace LibNet.Sharp2D
 {
-    public class RenderText : RenderOption
+    /// <summary>
+    /// RenderComponent that draw a text in a square
+    /// </summary>
+    public class RenderText : RenderComponent
     {
         private string _Text;
         private float _FontSize;
         private int TextureID;
         private IntPtr BitmapPtr = IntPtr.Zero;
         private int BytesPerRow;
+
+        /// <summary>
+        /// Widht of bitmap used to render the text
+        /// </summary>
         public int BitmapWidth { get; private set; }
+        /// <summary>
+        /// Height of bitmap used to render the text
+        /// </summary>
         public int BitmapHeight { get; private set; }
         private SKSurface surface;
         private SKCanvas canvas;
         private SKTypeface typeFace;
         private SKColor ForeGround, Background;
         private bool Altered = false;
+
+        /// <summary>
+        /// Color of the text
+        /// </summary>
         public SColor TextColor
         {
             get
@@ -37,6 +51,10 @@ namespace LibNet.Sharp2D
                 Altered = true;
             }
         }
+
+        /// <summary>
+        /// Color of the square behind the text 
+        /// </summary>
         public SColor BackgroundColor
         {
             get
@@ -52,9 +70,23 @@ namespace LibNet.Sharp2D
                 Altered = true;
             }
         }
+
+        /// <summary>
+        /// Text to draw
+        /// </summary>
         public string Text { get { return _Text; } set { _Text = value; Altered = true; } }
+
+        /// <summary>
+        /// Size of the text
+        /// </summary>
         public float FontSize { get { return _FontSize; } set { _FontSize = value; Altered = true; } }
 
+        /// <summary>
+        /// Create an instance of RenderText
+        /// </summary>
+        /// <param name="text">Text to draw</param>
+        /// <param name="fontSize">Size of the text</param>
+        /// <param name="face">SKTypeface object that define the font of the text</param>
         public RenderText(string text, uint fontSize = 14, SKTypeface face = null)
         {
             this.Text = text;
@@ -64,11 +96,16 @@ namespace LibNet.Sharp2D
             this.typeFace = face != null ? face : SKTypeface.Default;
             this.GenImage();
         }
+
+        ///<summary>
+        /// Destruct this instance and free the memory allocated to store the text data 
+        ///<summary>
         ~RenderText()
         {
             Marshal.FreeHGlobal(BitmapPtr);
             BitmapPtr = IntPtr.Zero;
         }
+
         private void GenImage()
         {
             int max_widht = 0;
@@ -130,6 +167,9 @@ namespace LibNet.Sharp2D
 
         }
 
+        /// <summary>
+        /// Get the widht and height of the text
+        /// </summary>
         public Vector2 MeasureSize()
         {
             if (Altered) this.GenImage();

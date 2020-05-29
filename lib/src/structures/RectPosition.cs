@@ -2,28 +2,54 @@ using OpenTK;
 
 namespace LibNet.Sharp2D
 {
+    /// <summary>
+    /// Class that represent the position and the size of a square
+    /// </summary>
     public struct RectPosition
     {
+        /// <summary>
+        /// Size of the square
+        /// </summary>
         public Vector2 size;
+
+        /// <summary>
+        /// Position of the square
+        /// </summary>
         public Vector3 position;
 
+        /// <summary>
+        /// Create an instance of RectPosition
+        /// </summary>
+        /// <param name="position">Position of the square</param>
+        /// <param name="size">Size of the square</param>
         public RectPosition(Vector3 position, Vector2 size)
         {
             this.size = size;
             this.position = position;
         }
+
+        /// <summary>
+        /// Create an instance of RectPosition
+        /// </summary>
+        /// <param name="position">Position of the square</param>
+        /// <param name="size">Size of the square</param>
         public RectPosition(Vector2 position, Vector2 size)
         {
             this.size = size;
             this.position = new Vector3(position);
         }
 
-        public static bool Inside(RectPosition a, Vector2 b)
+        /// <summary>
+        /// Verify if the point is inside the squre area
+        /// </summary>
+        /// <param name="square"></param>
+        /// <param name="point"></param>
+        public static bool Inside(RectPosition square, Vector2 point)
         {
 
-            if (a.position.X <= b.X && b.X < a.position.X + a.size.X)
+            if (square.position.X <= point.X && point.X < square.position.X + square.size.X)
             {
-                if (a.position.Y <= b.Y && b.Y < a.position.Y + a.size.Y)
+                if (square.position.Y <= point.Y && point.Y < square.position.Y + square.size.Y)
                 {
                     return true;
                 }
@@ -31,6 +57,13 @@ namespace LibNet.Sharp2D
 
             return false;
         }
+
+        /// <summary>
+        /// Verify if two square are in contact
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static bool Hit(RectPosition a, RectPosition b)
         {
 
@@ -44,33 +77,70 @@ namespace LibNet.Sharp2D
             return false;
         }
 
+        /// <summary>
+        /// Indicates whether this instance and a specified object are equal.
+        /// </summary>
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <summary>
+        /// Return this object in a string format
+        /// </summary>
         public override string ToString()
         {
-            return base.ToString();
+            return $"Position: X:{position.X} Y:{position.Y} Z:{position.Z} Size: X:{size.X} Y:{size.Y}";
         }
+
+        /// <summary>
+        /// Verify if two RectPositions are equals
+        /// </summary>
         public static bool operator ==(RectPosition left, RectPosition right) => (left.position, left.size) == (right.position, right.size);
+
+        /// <summary>
+        /// Verify if two RectPositions aren´t equals
+        /// </summary>
         public static bool operator !=(RectPosition left, RectPosition right) => (left.position, left.size) != (right.position, right.size);
 
+        /// <summary>
+        /// Verify if an RectPosition is inside or matching another
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>Return true if match or right is inside left</returns>
         public static bool operator >=(RectPosition left, RectPosition right)
         {
             if (left == right) return true;
             return left > right;
         }
+
+        /// <summary>
+        /// Verify if an RectPosition is inside or matching another
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>Return true if match or left is inside right</returns>
         public static bool operator <=(RectPosition left, RectPosition right)
         {
             if (left == right) return true;
             return left < right;
         }
+
+        /// <summary>
+        /// Verify if an RectPosition is inside another
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>Return true if right is inside left</returns>
         public static bool operator >(RectPosition left, RectPosition right)
         {
 
@@ -80,6 +150,13 @@ namespace LibNet.Sharp2D
 
             return false;
         }
+
+        /// <summary>
+        /// Verify if an RectPosition is inside another
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns>Return true if left is inside right</returns>
         public static bool operator <(RectPosition left, RectPosition right)
         {
             if (left.position.X > right.position.X && left.position.X < right.position.X + right.size.X)

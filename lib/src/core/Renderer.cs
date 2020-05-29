@@ -8,6 +8,9 @@ using System.Collections.Generic;
 
 namespace LibNet.Sharp2D
 {
+    /// <summary>
+    /// Class tha allow load image and draw RenderComponents
+    /// </summary>
     public class Renderer
     {
         private const int MAT4_SIZE = 16 * sizeof(float);
@@ -22,6 +25,12 @@ namespace LibNet.Sharp2D
         internal static int shaderTextureID;
         internal static int shaderTextID;
 
+        /// <summary>
+        /// Create an instance of Renderer
+        /// Needed buffers, shaders and vaos are loaded
+        /// </summary>
+        /// <param name="width">widht of the view port</param>
+        /// <param name="height">height of the view port</param>
         public Renderer(int width, int height)
         {
             ViewPort = new Vector2(width, height);
@@ -32,6 +41,10 @@ namespace LibNet.Sharp2D
             LoadShaders();
             LoadVAOs();
         }
+
+        /// <summary>
+        /// Desconstruct this instance and delete the shaders and images loaded in the gpu memory
+        /// </summary>
         ~Renderer()
         {
             GL.DeleteTextures(imagesLoaded.Count, imagesLoaded.ToArray());
@@ -39,6 +52,11 @@ namespace LibNet.Sharp2D
             GL.DeleteProgram(shaderColorID);
         }
 
+        /// <summary>
+        /// Set the size of the view port 
+        /// </summary>
+        /// <param name="width"> view port width </param>
+        /// <param name="height">view port height</param>
         public void Resize(in int width, in int height)
         {
             ViewPort.X = width;
@@ -46,7 +64,14 @@ namespace LibNet.Sharp2D
             ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0, ViewPort.X, ViewPort.Y, 0, 100.0f, -100.0f);
             UpdateProjMatrixOnGPU();
         }
-        public void Draw(in RenderOption renderData, Vector3 position, Vector2 size)
+
+        /// <summary>
+        /// Draw a RenderComponent onto window
+        /// </summary>
+        /// <param name="renderData">Component to draw</param>
+        /// <param name="position">Position of component</param>
+        /// <param name="size">Size of component</param>
+        public void Draw(in RenderComponent renderData, Vector3 position, Vector2 size)
         {
             Matrix4[] matrices = RectToMat(new RectPosition(position, size));
             renderData.Use();
@@ -54,7 +79,14 @@ namespace LibNet.Sharp2D
             GL.BindVertexArray(rectID);
             GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, matrices.Length);
         }
-        public void Draw(in RenderOption renderData, Vector2 position, Vector2 size)
+
+        /// <summary>
+        /// Draw a RenderComponent onto window
+        /// </summary>
+        /// <param name="renderData">Component to draw</param>
+        /// <param name="position">Position of component</param>
+        /// <param name="size">Size of component</param>
+        public void Draw(in RenderComponent renderData, Vector2 position, Vector2 size)
         {
             Matrix4[] matrices = RectToMat(new RectPosition(position, size));
             renderData.Use();
@@ -62,7 +94,13 @@ namespace LibNet.Sharp2D
             GL.BindVertexArray(rectID);
             GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, matrices.Length);
         }
-        public void Draw(in RenderOption renderData, params RectPosition[] transforms)
+
+        /// <summary>
+        /// Draw a RenderComponent onto window
+        /// </summary>
+        /// <param name="renderData">Component to Draw</param>
+        /// <param name="transforms">Array of RectPositions</param>        
+        public void Draw(in RenderComponent renderData, params RectPosition[] transforms)
         {
             Matrix4[] matrices = RectToMat(transforms);
             renderData.Use();
@@ -70,7 +108,13 @@ namespace LibNet.Sharp2D
             GL.BindVertexArray(rectID);
             GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, matrices.Length);
         }
-        public void Draw(in RenderOption renderData, params Matrix4[] transforms)
+
+        /// <summary>
+        /// Draw a RenderComponent onto window
+        /// </summary>
+        /// <param name="renderData">Component to Draw</param>
+        /// <param name="transforms">Array of Matrix4</param> 
+        public void Draw(in RenderComponent renderData, params Matrix4[] transforms)
         {
             renderData.Use();
             SetTransforms(transforms);
@@ -78,12 +122,19 @@ namespace LibNet.Sharp2D
             GL.DrawElementsInstanced(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (IntPtr)0, transforms.Length);
         }
 
+        /// <summary>
+        /// Load an image in the gpu memory
+        /// </summary>
+        /// <param name="path">path to the file</param>
+        /// <returns>image id</returns>
         public static int LoadImage(string path)
         {
 
             using (var fs = new FileStream(path, FileMode.Open))
             {
                 SKBitmap bitmap = SKBitmap.Decode(fs);
+                Console.WriteLine(bitmap.ColorType);
+
                 int textureID = GL.GenTexture();
                 GL.BindTexture(TextureTarget.Texture2D, textureID);
 
@@ -92,7 +143,7 @@ namespace LibNet.Sharp2D
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
-                GL.TexImage2D(TextureTarget.Texture2D, 0, (PixelInternalFormat)PixelFormat.Rgba, bitmap.Width, bitmap.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, bitmap.Bytes);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, (PixelInternalFormat)PixelFormat.Rgba, bitmap.Width, bitmap.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, bitmap.Bytes);
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
                 return textureID;
