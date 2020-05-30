@@ -150,6 +150,25 @@ namespace LibNet.Sharp2D
             }
         }
 
+        /// <summary>
+        /// Load font from file
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns></returns>
+        public static SKTypeface LoadFontFromFile(string path)
+        {
+            return SKTypeface.FromFile(path);
+        }
+
+        /// <summary>
+        /// Load font from family
+        /// </summary>
+        /// <param name="familyName">Name of the family</param>
+        /// <returns></returns>
+        public static SKTypeface LoadFontFromFamily(string familyName)
+        {
+            return SKTypeface.FromFamilyName(familyName);
+        }
         private void SetTransforms(params Matrix4[] transforms)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, SHADER_VERTEX_MODEL_BUFFER);

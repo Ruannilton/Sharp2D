@@ -97,6 +97,22 @@ namespace LibNet.Sharp2D
             this.GenImage();
         }
 
+        /// <summary>
+        /// Create an instance of RenderText
+        /// </summary>
+        /// <param name="text">Text to draw</param>
+        /// <param name="fontFamilyName">Name of the font family</param>
+        /// <param name="fontSize">Size of the text</param>
+        public RenderText(string text, string fontFamilyName, uint fontSize = 14)
+        {
+            this.Text = text;
+            this.FontSize = fontSize;
+            this.TextColor = Color.Black;
+            this.BackgroundColor = Color.Transparent;
+            this.typeFace = SKTypeface.FromFamilyName(fontFamilyName);
+            this.GenImage();
+        }
+
         ///<summary>
         /// Destruct this instance and free the memory allocated to store the text data 
         ///<summary>
