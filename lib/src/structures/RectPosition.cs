@@ -22,7 +22,7 @@ namespace LibNet.Sharp2D
         /// </summary>
         /// <param name="position">Position of the square</param>
         /// <param name="size">Size of the square</param>
-        public RectPosition(Vector3 position, Vector2 size)
+        public RectPosition(Vector3 position = default, Vector2 size = default)
         {
             this.size = size;
             this.position = position;
@@ -33,11 +33,25 @@ namespace LibNet.Sharp2D
         /// </summary>
         /// <param name="position">Position of the square</param>
         /// <param name="size">Size of the square</param>
-        public RectPosition(Vector2 position, Vector2 size)
+        public RectPosition(Vector2 position = default, Vector2 size = default)
         {
             this.size = size;
             this.position = new Vector3(position);
         }
+
+        /// <summary>
+        /// Create an instance of RectPosition
+        /// </summary>
+        /// <param name="x">Horizontal position of the square</param>
+        /// <param name="y">Vertical position of the square</param>
+        /// <param name="width">Horizontal size of the square</param>
+        /// <param name="height">Vertical size of the square</param>
+        public RectPosition(float x = 10, float y = 10, float width = 100, float height = 100)
+        {
+            this.position = new Vector3(x, y, 0);
+            this.size = new Vector2(width, height);
+        }
+
 
         /// <summary>
         /// Verify if the point is inside the squre area
@@ -100,6 +114,11 @@ namespace LibNet.Sharp2D
         {
             return $"Position: X:{position.X} Y:{position.Y} Z:{position.Z} Size: X:{size.X} Y:{size.Y}";
         }
+
+        /// <summary>
+        /// Convert RecPosition to OpenTk.Matrix4
+        /// </summary>
+        public static implicit operator Matrix4(RectPosition rect) => Matrix4.CreateScale(rect.size.X, rect.size.Y, 1) * Matrix4.CreateTranslation(rect.position.X, rect.position.Y, rect.position.Z);
 
         /// <summary>
         /// Verify if two RectPositions are equals

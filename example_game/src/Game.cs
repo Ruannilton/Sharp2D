@@ -35,6 +35,8 @@ public class Game : GameWindow
     private bool Alive;
 
 
+
+
     public Game() : base(800, 640, GraphicsMode.Default, "Game Example")
     {
         Graphics = new Renderer(800, 640);
@@ -64,10 +66,10 @@ public class Game : GameWindow
         Jump = false;
         OnFloor = true;
         distLast = 0;
-        HowPlay = new RenderText("Press any button to jump!", 35);
+        HowPlay = new RenderText("Press any button to jump!", 35, Renderer.LoadFontFromFile("./fonts/Pulsar.otf"));
         HowPlay.TextColor = SColor.Yellow;
         HowPlayPos = new Vector2(400 - HowPlay.MeasureSize().X / 2, 100);
-        ScoreText = new RenderText(Score.ToString(), 20);
+        ScoreText = new RenderText(Score.ToString(), 20, Renderer.LoadFontFromFile("./fonts/Pulsar.otf"));
 
 
         for (int i = 0; i < 20; i++)
